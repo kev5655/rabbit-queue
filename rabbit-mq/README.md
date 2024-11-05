@@ -24,3 +24,7 @@ helm install rabbitmq bitnami/rabbitmq -n rabbitmq
 ```bash
 helm show values rabbitmq bitnami/rabbitmq > values-rabbitmq.yaml
 ```
+
+kubectl port-forward service/rabbitmq 15672:15672 -n rabbitmq
+
+kubectl port-forward service/rabbitmq 5672:5672 -n rabbitmq

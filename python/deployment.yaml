@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-queue-subscriber-simple
+  namespace: rabbit-mq-applications
+  labels:
+    app: python-queue-subscriber-simple
+spec:
+  replicas: 2 # Number of pod replicas
+  selector:
+    matchLabels:
+      app: python-queue-subscriber-simple
+  template:
+    metadata:
+      labels:
+        app: python-queue-subscriber-simple
+    spec:
+      containers:
+        - name: python-queue-subscriber-simple
+          image: python-queue-subscriber-simple:latest # Replace with your Docker image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5672 #Rabbit MQ Port
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          env:
+            - name: ENV
+              value: "prod"
+            - name: MQ_TYPE
+              value: subscriber
+            - name: RABBITMQ_HOST
+              value: "rabbitmq.rabbitmq.svc.cluster.local" #"10.101.22.215" #"rabbitmq.rabbitmq.svc.cluster.local" # Replace with your actual RabbitMQ service name
+            - name: RABBITMQ_USER
+              value: "user"
+            - name: RABBITMQ_PASSWORD
+              value: "A5DGzuG3HeX48hwS"
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-queue-subscriber-simple-service
+  namespace: rabbit-mq-applications
+spec:
+  type: ClusterIP
+  selector:
+    app: node-matrix-api
+  ports:
+    - protocol: TCP
+      port: 5672
+      targetPort: 5672
+
