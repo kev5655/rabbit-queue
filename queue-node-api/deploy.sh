@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAMESPACE="rabbitmq-application"
-DEPLOYMENT_NAME="python-queue-subscriber-simple"
+DEPLOYMENT_NAME="node-publisher-api"
 IMAGE_NAME="registry.lambda-it.ch/library/hackweek-kevin/$DEPLOYMENT_NAME:latest"
 
 echo "Build Docker Image"

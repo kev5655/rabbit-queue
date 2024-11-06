@@ -28,3 +28,5 @@ helm show values rabbitmq bitnami/rabbitmq > values-rabbitmq.yaml
 kubectl port-forward service/rabbitmq 15672:15672 -n rabbitmq
 
 kubectl port-forward service/rabbitmq 5672:5672 -n rabbitmq
+
+kubectl port-forward service/node-publisher-api-service 3000:3000 -n rabbit-mq-applications

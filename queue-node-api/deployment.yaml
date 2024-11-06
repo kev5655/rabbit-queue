@@ -1,26 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python-queue-subscriber-simple
-  namespace: rabbitmq-application
+  name: node-publisher-api
+  namespace: rabbit-mq-applications
   labels:
-    app: python-queue-subscriber-simple
+    app: node-publisher-api
 spec:
-  replicas: 2 # Number of pod replicas
+  replicas: 4 # Number of pod replicas
   selector:
     matchLabels:
-      app: python-queue-subscriber-simple
+      app: node-publisher-api
   template:
     metadata:
       labels:
-        app: python-queue-subscriber-simple
+        app: node-publisher-api
     spec:
       containers:
-        - name: python-queue-subscriber-simple
-          image: registry.lambda-it.ch/library/hackweek-kevin/python-queue-subscriber-simple:latest # Replace with your Docker image
-          imagePullPolicy: Always
+        - name: node-publisher-api
+          image: node-publisher-api:latest
+          imagePullPolicy: Never
           ports:
-            - containerPort: 5672 #Rabbit MQ Port
+            - containerPort: 3000 # Typical port for NestJS apps
+            - containerPort: 5672 # RabbitMQ protocol port
           resources:
             requests:
               memory: "256Mi"
@@ -32,9 +33,9 @@ spec:
             - name: ENV
               value: "prod"
             - name: MQ_TYPE
-              value: subscriber
+              value: publisher
             - name: RABBITMQ_HOST
-              value: "rabbitmq.rabbitmq.svc.cluster.local" #"10.101.22.215" #"rabbitmq.rabbitmq.svc.cluster.local" # Replace with your actual RabbitMQ service name
+              value: "rabbitmq.rabbitmq.svc.cluster.local"
             - name: RABBITMQ_USER
               value: "user"
             - name: RABBITMQ_PASSWORD
@@ -47,14 +48,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: python-queue-subscriber-simple-service
-  namespace: rabbitmq-application
+  name: node-publisher-api-service
+  namespace: rabbit-mq-applications
 spec:
   type: ClusterIP
   selector:
-    app: node-matrix-api
+    app: node-publisher-api
   ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
     - protocol: TCP
       port: 5672
       targetPort: 5672
-

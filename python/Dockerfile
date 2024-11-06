@@ -41,4 +41,4 @@ ENV PATH="/opt/venv/bin:$PATH"
 #EXPOSE 5672
 
 # Set the default command
-CMD ["python", "receive.py"]
+CMD ["python", "-u", "receive.py"]

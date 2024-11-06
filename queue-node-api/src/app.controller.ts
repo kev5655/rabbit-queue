@@ -16,11 +16,11 @@ export class AppController {
     try {
       // Connect to RabbitMQ server
       const connection = await amqp.connect({
-        hostname: 'localhost',
-        port: 5672,
-        username: 'user',
-        password: 'A5DGzuG3HeX48hwS',
-      }); // Replace with your RabbitMQ connection string if needed
+        hostname: process.env.RABBITMQ_HOST || 'localhost',
+        port: Number(process.env.RABBITMQ_PORT) || 5672,
+        username: process.env.RABBITMQ_USER || 'guest',
+        password: process.env.RABBITMQ_PASSWORD || 'guest',
+      });
       const channel = await connection.createChannel();
 
       // Declare a queue to send to (it will be created if it doesn't exist)

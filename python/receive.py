@@ -15,15 +15,12 @@ env_variables = [
     ["RABBITMQ_PASSWORD", rabbitmq_password],
 ]
 
+# logging.info(tabulate(env_variables, headers=["Key", "Value"], tablefmt="grid"))
 # Print the environment variables in a beautiful table format
 print(tabulate(env_variables, headers=["Key", "Value"], tablefmt="grid"))
 
 try:
-    print("UPDATE")
-    # while True:
-    #     print("wait")
-    #     time.sleep(10)
-    # Establish a connection to RabbitMQ server
+    print("Connect to rabbitmq")
     connection = pika.BlockingConnection(pika.ConnectionParameters(
         host=rabbitmq_host,
         port=5672,
@@ -48,6 +45,3 @@ try:
 except Exception as e:
     print("Error happened")
     print(e.message)
-    while True:
-        print("wait")
-        time.sleep(10)
